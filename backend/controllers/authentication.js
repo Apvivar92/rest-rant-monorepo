@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../models');
 const bcrypt = require('bcrypt');
+const { TimeoutError } = require('sequelize/types');
 
 const { User } = db;
 
@@ -17,6 +18,17 @@ router.post('/', async (req, res) => {
     });
   } else {
     res.json({ user });
+  }
+});
+
+router.get('/profile', async (req, res) => {
+  try {
+    let user = await User.findOne({
+      where: { userId: id },
+    });
+    res.json(user);
+  } catch {
+    res.json(null);
   }
 });
 
